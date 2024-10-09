@@ -66,3 +66,12 @@ export interface PowerData {
     Shortage: number;
     LastModified: string;
 }
+
+
+// @Note(Victor): All interfaces combined
+export interface PowerSystemState extends PowerData {
+    PowerTransferMap: PowerTransfer[];
+    Temperatures: Temperatures;
+    Urls: Urls;
+    InfoTexts: InfoTexts;
+}

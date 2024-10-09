@@ -10,7 +10,6 @@ export const HealthCheck = () => {
 
     const fetchHealthData = async () => {
         try {
-            console.log('REQUESTING')
             setError(undefined)
             setLoading(true)
 
