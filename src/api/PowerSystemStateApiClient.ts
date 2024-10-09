@@ -1,14 +1,11 @@
-// @Note(Victor): This is an undocumented used at: https://www.fingrid.fi/online
-// https://www.fingrid.fi/api/graph/power-system-state?language=en
+import { PowerSystemState } from "../types/PowerSystemState";
 
-export class PowerSystemStateApiClient {
-    getPowerSystemState = async () => {
-        try {
-            const res = await fetch('https://www.fingrid.fi/api/graph/power-system-state?language=en')
-            return res.json()
-        } catch (error) {
-            console.error(error)
-            return error;
-        }
+export class PowerSystemStateApi {
+    async getPowerSystemState(): Promise<PowerSystemState> {
+        const res = await fetch('/api/graph/power-system-state?language=en');
+        console.log(res)
+        return res.json()
     }
 }
+
+export const PowerSystemStateApiClient = new PowerSystemStateApi();

@@ -3,7 +3,7 @@ import { HealthStatus, ResponseError } from "../../generated-api"
 import { HealthCheckApiClient } from "../api/HealthCheckApiClient"
 import { ApiError } from "../types/Error"
 
-export const HealthCheck = () => {
+export const HealthCheckComponent = () => {
     const [healthStatus, setHealthStatus] = useState<HealthStatus | undefined>()
     const [error, setError] = useState<ApiError | undefined>(undefined)
     const [loading, setLoading] = useState<boolean>(false)
@@ -56,7 +56,7 @@ export const HealthCheck = () => {
                     <p className="text-xl font-bold leading-6 text-gray-400">{systemName}</p>
                     <p className="mt-2 flex flex-col items-baseline gap-x-2">
                         {healthStatus.app ? <span className="text-sm text-gray-400">Status</span> : null}
-                        <span className="text-4xl font-semibold tracking-tight text-white">{systemStatus}</span>
+                        <span className="text-2xl font-semibold tracking-tight text-white">{systemStatus}</span>
                     </p>
                 </div>
             )}
