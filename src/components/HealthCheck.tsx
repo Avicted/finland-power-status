@@ -54,6 +54,20 @@ export const HealthCheck = () => {
         fetchHealthData();
     }, []) // Run once on mount
 
+    const RenderSystemState = (systemName: string, systemStatus: string) => (
+        <>
+            {healthStatus !== undefined && (
+                <div className="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
+                    <p className="text-xl font-bold leading-6 text-gray-400">{systemName}</p>
+                    <p className="mt-2 flex flex-col items-baseline gap-x-2">
+                        {healthStatus.app ? <span className="text-sm text-gray-400">Status</span> : null}
+                        <span className="text-4xl font-semibold tracking-tight text-white">{systemStatus}</span>
+                    </p>
+                </div>
+            )}
+        </>
+    )
+
     if (loading) return (
         <h2>Loading...</h2>
     )
@@ -68,27 +82,9 @@ export const HealthCheck = () => {
                 <div className="bg-gray-900">
                     <div className="mx-auto max-w-7xl">
                         <div className="grid grid-cols-1 gap-px bg-white/5 sm:grid-cols-2 lg:grid-cols-3">
-                            <div className="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
-                                <p className="text-xl font-bold leading-6 text-gray-400">App</p>
-                                <p className="mt-2 flex flex-col items-baseline gap-x-2">
-                                    {healthStatus.app ? <span className="text-sm text-gray-400">Status</span> : null}
-                                    <span className="text-4xl font-semibold tracking-tight text-white">{healthStatus.app.status}</span>
-                                </p>
-                            </div>
-                            <div className="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
-                                <p className="text-xl font-bold leading-6 text-gray-400">Database</p>
-                                <p className="mt-2 flex flex-col items-baseline gap-x-2">
-                                    {healthStatus.app ? <span className="text-sm text-gray-400">Status</span> : null}
-                                    <span className="text-4xl font-semibold tracking-tight text-white">{healthStatus.database.status}</span>
-                                </p>
-                            </div>
-                            <div className="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
-                                <p className="text-xl font-bold leading-6 text-gray-400">Network</p>
-                                <p className="mt-2 flex flex-col items-baseline gap-x-2">
-                                    {healthStatus.app ? <span className="text-sm text-gray-400">Status</span> : null}
-                                    <span className="text-4xl font-semibold tracking-tight text-white">{healthStatus.network.status}</span>
-                                </p>
-                            </div>
+                            {RenderSystemState('App', healthStatus.app.status)}
+                            {RenderSystemState('Database', healthStatus.database.status)}
+                            {RenderSystemState('Network', healthStatus.network.status)}
                         </div>
                     </div>
                 </div>
