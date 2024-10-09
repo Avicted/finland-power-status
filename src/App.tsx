@@ -1,4 +1,3 @@
-import './App.css'
 import { HealthCheck } from './components/HealthCheck'
 
 function App() {

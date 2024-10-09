@@ -93,7 +93,6 @@ export const HealthCheck = () => {
                     </div>
                 </div>
             )}
-
         </>
     )
 }

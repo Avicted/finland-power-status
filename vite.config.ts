@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
                     changeOrigin: true,
                     secure: false,
                     configure: (proxy) => {
-                        proxy.on('proxyReq', (proxyReq, req, res) => {
+                        proxy.on('proxyReq', (proxyReq, _req, _res) => {
                             console.log('CLIENT: proxyReq')
                             console.log(API_URL)
                             proxyReq.setHeader('x-api-key', API_KEY);
