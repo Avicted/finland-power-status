@@ -1,4 +1,4 @@
-interface PowerTransfer {
+export interface PowerTransfer {
     Key: string;
     Value: number | null;
     MaxImport: number;
@@ -6,11 +6,11 @@ interface PowerTransfer {
     IsExport: boolean;
 }
 
-interface Temperatures {
+export interface Temperatures {
     [city: string]: number;
 }
 
-interface Urls {
+export interface Urls {
     ConsumptionUrl: string | null;
     ProductionUrl: string | null;
     NetImportExportUrl: string | null;
@@ -25,7 +25,7 @@ interface Urls {
     Co2InfoUrl: string | null;
 }
 
-interface InfoTexts {
+export interface InfoTexts {
     ConsumptionInfo: string | null;
     ProductionInfo: string | null;
     ImportExportInfo: string | null;
@@ -36,7 +36,7 @@ interface InfoTexts {
     PowerTransferInfo: string | null;
 }
 
-interface PowerData {
+export interface PowerData {
     PowerTransferMap: PowerTransfer[];
     Temperatures: Temperatures;
     Urls: Urls;

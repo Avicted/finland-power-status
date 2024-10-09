@@ -1,15 +1,11 @@
+import { useEffect, useState } from "react"
 import { HealthStatus, ResponseError } from "../../generated-api"
 import { HealthCheckApiClient } from "../api/HealthCheckApiClient"
-import { useEffect, useState } from "react"
-
-interface Error {
-    statusCode: number,
-    message: string,
-}
+import { ApiError } from "../types/Error"
 
 export const HealthCheck = () => {
     const [healthStatus, setHealthStatus] = useState<HealthStatus | undefined>()
-    const [error, setError] = useState<Error | undefined>(undefined)
+    const [error, setError] = useState<ApiError | undefined>(undefined)
     const [loading, setLoading] = useState<boolean>(false)
 
     const fetchHealthData = async () => {
@@ -81,7 +77,7 @@ export const HealthCheck = () => {
             {healthStatus !== undefined && (
                 <div className="bg-gray-900">
                     <div className="mx-auto max-w-7xl">
-                        <div className="grid grid-cols-1 gap-px bg-white/5 sm:grid-cols-2 lg:grid-cols-3">
+                        <div className="grid grid-cols-1 gap-px bg-white/5 sm:grid-cols-1 lg:grid-cols-3">
                             {RenderSystemState('App', healthStatus.app.status)}
                             {RenderSystemState('Database', healthStatus.database.status)}
                             {RenderSystemState('Network', healthStatus.network.status)}
