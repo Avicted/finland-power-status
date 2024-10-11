@@ -52,7 +52,7 @@ export const HealthCheckComponent = () => {
     const RenderSystemState = (systemName: string, systemStatus: string) => (
         <>
             {healthStatus !== undefined && (
-                <div className="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
+                <div className="bg-gray-900 px-4 py-4 sm:px-6 lg:px-8">
                     <p className="text-xl font-bold leading-6 text-gray-400">{systemName}</p>
                     <p className="mt-2 flex flex-col items-baseline gap-x-2">
                         {healthStatus.app ? <span className="text-sm text-gray-400">Status</span> : null}
