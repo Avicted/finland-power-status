@@ -3,6 +3,7 @@ import { ApiError } from "../types/Error"
 import { PowerSystemState } from "../types/PowerSystemState"
 import { ResponseError } from "../../generated-api";
 import { PowerSystemApiClient } from "../api/PowerSystemStateApiClient";
+import MapImage from '../assets/map_inverted.png'
 
 export const PowerSystemStateComponent = () => {
     const [powerSystemState, setPowerSystemState] = useState<PowerSystemState | undefined>()
@@ -11,8 +12,6 @@ export const PowerSystemStateComponent = () => {
 
     const fetchPowerSystemData = async () => {
         console.log('fetchPowerSystemData')
-
-        if (powerSystemState) return
 
         try {
             setError(undefined)
@@ -70,8 +69,130 @@ export const PowerSystemStateComponent = () => {
 
                 {powerSystemState && (
                     <>
-                        <h2 className="text-white font-bold text-slate-400">Production:</h2>
-                        <h1 className="text-white font-bold text-2xl">{powerSystemState.Production} MW</h1>
+                        <div className="flex flex-row gap-10 justify-between">
+                            <div className="flex flex-col">
+                                <h2 className="text-white font-bold text-slate-400">Consumption:</h2>
+                                <h1 className="text-white font-bold text-4xl">{powerSystemState.Consumption} <span className="text-lg">MW</span></h1>
+                            </div>
+
+                            <div className="flex flex-col">
+                                <h2 className="text-white font-bold text-slate-400">Total Production:</h2>
+                                <h1 className="text-white font-bold text-4xl">{powerSystemState.Production} <span className="text-lg">MW</span></h1>
+                            </div>
+
+                            <div className="flex flex-col">
+                                <h2 className="text-white font-bold text-slate-400">Electricity price in Finland:</h2>
+                                <h1 className="text-white font-bold text-4xl">{powerSystemState.ElectricityPriceInFinland} <span className="text-lg">€/MWh</span></h1>
+                            </div>
+
+                            <div className="flex flex-col">
+                                <h2 className="text-white font-bold text-slate-400">CO₂ emission estimate for consumed electricity:</h2>
+                                <h1 className="text-white font-bold text-4xl">{powerSystemState.ConsumptionEmissionCo2} <span className="text-lg">gCO2/kWh</span></h1>
+                            </div>
+                        </div>
+                        <div className="mt-12 grid grid-cols-3 gap-x-8 sm:grid-cols-1 lg:grid-cols-3">
+                            <div className="">
+                                <h2 className="text-white font-bold text-slate-400">Production:</h2>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Hydro power</p>
+                                    <p className="text-white font-bold">{powerSystemState.HydroPower} <span className="text-sm">MW</span></p>
+                                </div>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Nuclear power</p>
+                                    <p className="text-white font-bold">{powerSystemState.NuclearPower} <span className="text-sm">MW</span></p>
+                                </div>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Cogeneration (District Heating)</p>
+                                    <p className="text-white font-bold">{powerSystemState.CogenerationDistrictHeating} <span className="text-sm">MW</span></p>
+                                </div>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Cogeneration (Industry)</p>
+                                    <p className="text-white font-bold">{powerSystemState.CogenerationIndustry} <span className="text-sm">MW</span></p>
+                                </div>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Wind Power</p>
+                                    <p className="text-white font-bold">{powerSystemState.WindPower} <span className="text-sm">MW</span></p>
+                                </div>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Solar Power</p>
+                                    <p className="text-white font-bold">{powerSystemState.SolarPower} <span className="text-sm">MW</span></p>
+                                </div>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Other Production</p>
+                                    <p className="text-white font-bold">{powerSystemState.OtherProduction} <span className="text-sm">MW</span></p>
+                                </div>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Imports - Exports + net.</p>
+                                    <p className="text-white font-bold">{powerSystemState.NetImportExport} <span className="text-sm">MW</span></p>
+                                </div>
+                            </div>
+                            <div className="text-white">
+                                <h2 className="text-white font-bold text-slate-400">Efficiency balance:</h2>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Prod. Surplus Deficit</p>
+                                    <p className="text-white font-bold">{powerSystemState.ProductionSurplusDeficit} <span className="text-sm">MW</span></p>
+                                </div>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Prod. Surplus Deficit (cum. tot.)</p>
+                                    <p className="text-white font-bold">{powerSystemState.ProductionSurplusDeficit} <span className="text-sm">MW</span></p>
+                                </div>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Instantaneous frequency measurement</p>
+                                    <p className="text-white font-bold">{powerSystemState.InstantaneousFrequency} <span className="text-sm">Hz</span></p>
+                                </div>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Time deviation in the electrical grid</p>
+                                    <p className="text-white font-bold">{powerSystemState.TimeDeviation} <span className="text-sm">s</span></p>
+                                </div>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Inertia</p>
+                                    <p className="text-white font-bold">{powerSystemState.KineticEnergyNordic} <span className="text-sm">GWs</span></p>
+                                </div>
+                            </div>
+                            <div className="text-white">
+                                <h2 className="text-white font-bold text-slate-400">Temperatures:</h2>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Rovaniemi</p>
+                                    <p className="text-white font-bold">{powerSystemState.Temperatures['Rovaniemi']} <span className="text-sm">°C</span></p>
+                                </div>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Oulu</p>
+                                    <p className="text-white font-bold">{powerSystemState.Temperatures['Oulu']} <span className="text-sm">°C</span></p>
+                                </div>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Jyväskylä</p>
+                                    <p className="text-white font-bold">{powerSystemState.Temperatures['Jyväskylä']} <span className="text-sm">°C</span></p>
+                                </div>
+
+                                <div className="text-md flex justify-between">
+                                    <p className="text-slate-400 font-bold">Helsinki</p>
+                                    <p className="text-white font-bold">{powerSystemState.Temperatures['Helsinki']} <span className="text-sm">°C</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        {/*<div className="mt-24">
+                            <img
+                                alt="Map of Finland"
+                                src={MapImage}
+                                className="object-cover object-center group-hover:opacity-75"
+                            />
+                        </div>*/}
                     </>
                 )}
             </div>
