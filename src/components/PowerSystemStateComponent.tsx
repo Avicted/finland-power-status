@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react"
 import { ApiError } from "../types/Error"
 import { PowerSystemState } from "../types/PowerSystemState"
-import { PowerSystemStateApi, PowerSystemStateApiClient } from "../api/PowerSystemStateApiClient";
 import { ResponseError } from "../../generated-api";
-
-const ApiClient: PowerSystemStateApi = PowerSystemStateApiClient
+import { PowerSystemApiClient } from "../api/PowerSystemStateApiClient";
 
 export const PowerSystemStateComponent = () => {
     const [powerSystemState, setPowerSystemState] = useState<PowerSystemState | undefined>()
@@ -13,11 +11,14 @@ export const PowerSystemStateComponent = () => {
 
     const fetchPowerSystemData = async () => {
         console.log('fetchPowerSystemData')
+
+        if (powerSystemState) return
+
         try {
             setError(undefined)
             setLoading(true)
 
-            const res: PowerSystemState = await ApiClient.getPowerSystemState()
+            const res: PowerSystemState = await PowerSystemApiClient.getPowerSystemState()
             setPowerSystemState(res)
         } catch (error: any) {
             if (error instanceof ResponseError) {
@@ -50,7 +51,8 @@ export const PowerSystemStateComponent = () => {
     }
 
     useEffect(() => {
-        // fetchPowerSystemData();
+        console.log('Rendering PowerSystemStateComponent');
+        fetchPowerSystemData();
     }, []) // Run once on mount
 
     if (loading) return (
@@ -64,12 +66,12 @@ export const PowerSystemStateComponent = () => {
     return (
         <>
             <div className="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8 mt-8">
-                <h2 className="text-white text-2xl font-bold">Power System State</h2>
+                <h2 className="text-white text-2xl font-bold mb-4">Power System State</h2>
 
                 {powerSystemState && (
                     <>
-                        <h2 className="text-white font-bold">Production:</h2>
-                        <h3 className="text-white font-bold">{powerSystemState.Production}</h3>
+                        <h2 className="text-white font-bold text-slate-400">Production:</h2>
+                        <h1 className="text-white font-bold text-2xl">{powerSystemState.Production} MW</h1>
                     </>
                 )}
             </div>

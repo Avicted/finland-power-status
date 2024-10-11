@@ -1,53 +1,58 @@
-import { defineConfig, loadEnv } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig, loadEnv, ConfigEnv, ProxyOptions } from 'vite';
+import react from '@vitejs/plugin-react';
+import { IncomingMessage, ServerResponse } from 'http';
+import { ClientRequest } from 'http';
 
-export default defineConfig(({ mode }) => {
-    const env = loadEnv(mode, process.cwd());
-    const API_KEY = env.VITE_API_KEY; // Use VITE_ prefix for client-side environment variables
-    const API_URL = 'http://localhost:3000/api';
-    const FINGRID_GRAPH_API_URL = 'http://localhost:3000/api/graph';
+interface EnvVariables {
+    VITE_API_KEY: string;
+}
+
+// Helper function to create typed proxy configuration
+const createProxyConfig = (
+    targetUrl: string,
+    rewritePath: RegExp,
+    apiKey: string
+): ProxyOptions => ({
+    target: targetUrl,
+    changeOrigin: true,
+    secure: false,
+    timeout: 10000, // Increase the timeout (e.g., 10 seconds)
+    rewrite: (path: string) => path.replace(rewritePath, ""),
+    configure: (proxy) => {
+        proxy.on('proxyReq', (proxyReq: ClientRequest, req: IncomingMessage, res: ServerResponse) => {
+            console.log(`CLIENT: proxyReq - ${req.url}`);
+            console.log(`${rewritePath}`)
+            proxyReq.setHeader('x-api-key', apiKey);
+        });
+        proxy.on('error', (err: Error, _req: IncomingMessage, _res: ServerResponse) => {
+            console.error('proxy error', err);
+        });
+        proxy.on('proxyRes', (proxyRes: IncomingMessage, req: IncomingMessage) => {
+            console.log(`Received Response from Target: ${proxyRes.statusCode} ${req.url}`);
+        });
+    },
+});
+
+// Main Vite config
+export default defineConfig(({ mode }: ConfigEnv) => {
+    const env = loadEnv(mode, process.cwd()) as unknown as EnvVariables;
+    const API_KEY = env.VITE_API_KEY;
+    const API_URL = 'https://data.fingrid.fi/api';
+    const FINGRID_GRAPH_API_URL = 'https://www.fingrid.fi/api/graph';
 
     return {
         plugins: [react()],
         server: {
+            hmr: true, // Hot-module replacement
+            /*optimizeDeps: {
+                entries: [
+
+                ], // Disables entry pre-fetching
+            },*/
             proxy: {
-                '/api/graph': {
-                    target: FINGRID_GRAPH_API_URL,
-                    changeOrigin: true,
-                    secure: false,
-                    rewrite: (p) => p.replace(/^\/api/, ""),
-                    configure: (proxy) => {
-                        proxy.on('proxyReq', (proxyReq, _req, _res) => {
-                            console.log('CLIENT: Fingrid proxyReq');
-                            proxyReq.setHeader('x-api-key', API_KEY); // Add API key if needed
-                        });
-                        proxy.on('error', (err, _req, _res) => {
-                            console.log('Fingrid proxy error', err);
-                        });
-                        proxy.on('proxyRes', (proxyRes, req, _res) => {
-                            console.log('Received Response from Fingrid Target:', proxyRes.statusCode, req.url);
-                        });
-                    },
-                },
-                '/api': {
-                    target: API_URL, // The Express proxy server
-                    changeOrigin: true,
-                    secure: false,
-                    configure: (proxy) => {
-                        proxy.on('proxyReq', (proxyReq, _req, _res) => {
-                            console.log('CLIENT: proxyReq');
-                            console.log(API_URL);
-                            proxyReq.setHeader('x-api-key', API_KEY);
-                        });
-                        proxy.on('error', (err, _req, _res) => {
-                            console.log('proxy error', err);
-                        });
-                        proxy.on('proxyRes', (proxyRes, req, _res) => {
-                            console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
-                        });
-                    },
-                },
+                '/api/health': createProxyConfig(`${API_URL}/health`, /^\/api\/health/, API_KEY),
+                '/api/graph/power-system-state': createProxyConfig(`${FINGRID_GRAPH_API_URL}/power-system-state`, /^\/api\/graph\/power-system-state/, API_KEY),
             },
-        }
-    }
+        },
+    };
 });

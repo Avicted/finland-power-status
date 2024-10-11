@@ -4,7 +4,7 @@ This is a basic Vite React TypeScript client SPA (Single Page Application) that 
 
 This serves as an example of how to generate an API in TypeScript from an OpenAPI specification and also using the generated API.
 
-A Node.js proxy is used to adhere to the CORS policy at the end server.
+A Node.js proxy in **vite.config.js** is used to adhere to the CORS policy at the end server.
 
 **You need an API key to be able to use this client.**
 
@@ -13,10 +13,6 @@ A Node.js proxy is used to adhere to the CORS policy at the end server.
 npm install
 
 npm run dev
-
-# To proxy the requests to our dev server and then to the live server (CORS)
-cd proxy-dev-server
-node proxy.js
 ```
 
 The API in TypeScript **was** generated with the following command (no need to run this again):
